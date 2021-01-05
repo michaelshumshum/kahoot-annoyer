@@ -22,10 +22,12 @@ to flood bots, run the `flood.py` script. it will prompt you for the game PIN, t
 
 as of now, the scripts will not close itself upon game end. for now, press ctrl+c to end it. the terminal formatting will look weird afterwards due to how npyscreen works. type `reset` into the terminal and it should go back to normal.
 
-to search for kahoot games, run `search.py`. keep in mind that this script is quite resource heavy and doesn't ensure you can join those games, only provides you with codes for active games. press ctrl+c to end the script.
+to search for kahoot games, run `search.py`. keep in mind that this script is quite resource heavy and doesn't ensure you can join those games, only provides you with codes for active games. though, due to the large amounts of codes you get, you can get lucky with a code that has a good connection.
 
 do not touch any of the scripts with an `_` at the front unless you know what you are doing.
 
 ## notes
 it is still not perfect and can definetly be improved. some methods i use are quite stupid, such as the mothership class. i plan to optimize the code and increase the potential.
 feel free to suggest pull requests and identify issues.
+
+i am not liable for any damage caused by the users of my scripts. these scripts most likely break kahoot's TOS (terms of service) and any consequences from misuse or severity are solely the users responsibility.
