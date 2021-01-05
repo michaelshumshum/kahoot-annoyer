@@ -1,6 +1,3 @@
-import string
-import os
-os.sys.path.append('/usr/local/lib/python3.9/site-packages')
 import requests
 import random
 import time
