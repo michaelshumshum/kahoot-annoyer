@@ -2,7 +2,7 @@
 there is no such thing as fun
 ## about
 literally flood kahoot.it games with bots.
-inspired by msemple's kahoot-hack and theusaf's kahootPy
+inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) and [theusaf's kahootPy](https://github.com/theusaf/KahootPY)
 
 ## cool features
 - flood kahoot.it games with lots of bots. the beefier your computer, the more bots. from my testing on my touchbar macbook pro, i could easily get 200+ bots.
