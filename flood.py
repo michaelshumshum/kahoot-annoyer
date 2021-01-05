@@ -1,5 +1,4 @@
 import os
-os.sys.path.append('/usr/local/lib/python3.9/site-packages')
 os.popen('reset')
 import time
 import sys
