@@ -16,6 +16,7 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 - a decent internet connection and computer
 
 ## usage
+download or clone this repositiory to your computer. all files, besides the `README.md` of course, are required.
 to flood bots, run the `flood.py` script. it will prompt you for the game PIN, the number of bots, and an optional custom name for the bots. alternatively, you can add arguments to when you run the script instead of answering the prompts.
 
 (example: `python3 flood.py <PIN> <# of bots> <custom name>`).
