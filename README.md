@@ -12,7 +12,7 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 
 ## prerequisites
 - python 3.x
-- `pip install npyscreen`
+- `pip install npyscreen, python-pyfiglet`
 - a decent internet connection and computer
 
 ## usage
