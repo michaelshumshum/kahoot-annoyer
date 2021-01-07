@@ -30,7 +30,7 @@ def answer_payload(pin,clientId,subId,choice,type):
         choice = int(choice)
         id = 6
         answer = 'choice'
-    elif type == 'open':
+    elif type == 'open_ended':
         id = 45
         choice = str(choice)
         answer = 'text'
