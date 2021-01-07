@@ -23,9 +23,12 @@ print('=========================================================================
 time.sleep(0.5)
 while True:
     try:
+        prefix = sys.argv[3]
+    except:
+        prefix = 'bot'
+    try:
         pin = sys.argv[1]
         count = int(sys.argv[2])
-        prefix = sys.argv[3]
     except:
         pin = input('PIN:')
         while True:
@@ -38,46 +41,58 @@ while True:
         if prefix == '':
             prefix = 'bot'
 
-    names = gen_names(prefix,count+1)
+    names = gen_names(prefix,count)
     ids = []
-    for i in range(count+1):
+    for i in range(count):
         ids.append(i)
-
-    m_bot = mothership(name='testtesttest',pin=pin,ackId=999999,queue=q,bot_names=names)
-    if m_bot.connect() == 'error':
-        print('PIN is incorrect or your internet connection is bad')
-    else:
-        break
+    break
 
 def guifunc(*args):
+    global active
     f = Form(name='kahoot-annoyer')
-    while True:
-        f.update_values(q)
-        f.display()
+    f.update_values(q)
 def wrapper(q):
-    print(npyscreen.wrapper_basic(guifunc))
+    npyscreen.wrapper_basic(guifunc)
+
+def main_thread(queue):
+    while True:
+        get = queue.get()
+        if get[0] != 'main':
+            queue.put(get)
+        else:
+            time.sleep(2)
+            print('=======================================================')
+            print(f'Quiz URL: https://create.kahoot.it/details/{get[1]}')
+            print('=======================================================')
+            break
 
 threads = []
+quizid = ''
 
-m_bot = mothership(name=names[-1],pin=pin,ackId=ids[-1],queue=q,bot_names=names)
-thread = Thread(target=m_bot.run,name='mothership')
+thread = Thread(target=main_thread,args=(q,),name='main')
 threads.append(thread)
-thread.start()
 print(f'Started thread {thread}')
+thread.start()
+
+manager = manager(queue=q,bot_names=names)
+thread = Thread(target=manager.run,name='bot-manager')
+threads.append(thread)
+print(f'Started thread {thread}')
+thread.start()
 
 for i in range(count):
     f_bot = bot(name=names[i],pin=pin,ackId=ids[i],queue=q)
     thread = Thread(target=f_bot.run,name=names[i])
     threads.append(thread)
+    print(f'Started thread {thread}')
     thread.start()
     time.sleep(0.01)
-    print(f'Started thread {thread}')
 
-q.put(['gui',count+1,'init',pin,names[-1]])
+q.put(['gui',count,'init',pin,names[-1]])
 thread = Thread(target=wrapper,args=(q,),name='gui')
 threads.append(thread)
-thread.start()
 print(f'Started thread {thread}')
+thread.start()
 
 for thread in threads:
     thread.join()
