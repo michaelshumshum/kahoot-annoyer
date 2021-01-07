@@ -10,122 +10,80 @@ from _token import *
 from _payload import *
 from _functions import *
 
-class mothership:
+class manager:
 
-    def __init__(self, pin, name, ackId, queue, bot_names):
-        self.pin = pin
-        self.name = name
+    def __init__(self,queue,bot_names):
         self.bot_names = bot_names
-        self.s = requests.Session()
-        self.subId = 12
-        self.ackId = ackId
-        self.url = ''
-        self.token = ''
-        self.clientId = ''
+        self.active_bots = bot_names
+        self.quizid = ''
         self.queue = queue
-        self.epoch = int(datetime.datetime.now().strftime("%s"))
-
         self.thread = Thread(target=self.getbotdata)
-
         self.streaks = []
         self.points = []
+        self.question = 0
+        self.datarow = [0,0,0,0]
+        self.gui_ready = False
 
-    def connect(self):
-        try:
-            token_response = self.s.get(f'https://kahoot.it/reserve/session/{self.pin}/?{self.epoch}')
-            header_token = token_response.headers['x-kahoot-session-token']
-            content = json.loads(token_response.content)
-            challenge = str(content['challenge'])
-            challenge_token = challenge_handle(challenge)
-            self.token = gen_session(header_token,challenge_token)
-            self.url = f'https://kahoot.it/cometd/{self.pin}/{self.token}/'
-            response = self.s.post(f'{self.url}/handshake',data=handshake_payload(self.ackId))
-            resp = json.loads(response.text)
-            self.clientId = str(resp[0]["clientId"])
-            self.s.post(self.url,data=name_payload(self.name,self.pin,self.clientId))
-            return 'success'
-        except:
-            return 'error'
-
-    def maintain_connection(self):
-        self.subId += 1
-        r = self.s.post(self.url,data=first_con_payload(self.ackId,self.clientId,self.subId))
-        response = json.loads(r.text)
-        if len(response) > 0:
-          for i,x in enum(response):
-            if x['channel'] != "/meta/connect":
-              self.put_queue(x['data'])
-        while True:
-            self.subId += 1
-            r = self.s.post(self.url,data=second_con_payload(self.ackId,self.clientId,self.subId))
-            response = json.loads(r.text)
-            if len(response) > 0:
-              for i,x in enum(response):
-                if x['channel'] == "/service/player":
-                    self.put_queue(x['data'])
-
+#['manager','data',self.name,correct,pointsdata['questionPoints'],data_content['totalScore'],streakdata['streakLevel'],data_content['rank']]
+#['manager','answer',self.name,choice,type,index,amount]
     def getbotdata(self):
         while True:
             get = self.queue.get()
-            if get[0] == 'mothership':
-                if get[2]:
-                    if get[2] == True:
-                        correct = 'correctly'
-                    if get[2] == False:
-                        correct = 'incorrectly'
-                    self.queue.put(['gui',get[1],'correct',correct,get[4]])
-
-                streaks_repeated = [string for string in self.streaks if get[1] in string]
-                points_repeated = [string for string in self.points if get[1] in string]
-
-                for i in range(len(streaks_repeated)-1):
-                    self.streaks.remove(streaks_repeated[i])
-                for i in range(len(points_repeated)-1):
-                    self.points.remove(points_repeated[i])
-
-                self.streaks.append(f'{get[5]} = {get[1]}')
-                self.points.append(f'{int(get[3])} = {get[1]}')
-
-                self.streaks.sort(reverse=True,key=getints)
-                self.points.sort(reverse=True,key=getints)
-                self.queue.put(['gui',None,'streaks debug',self.streaks])
-                self.queue.put(['gui',None,'points debug',self.points])
-                self.queue.put(['gui',None,'botdata',self.streaks[0],self.points[0],self.points[-1]])
+            if get[0] == 'manager':
+                if get[1] == 'answer':
+                    if get[5] != self.question:
+                        self.question = get[5]
+                        self.queue.put(['gui',None,'index',self.question])
+                    if self.gui_ready == False:
+                        self.queue.put(['gui',None,'nums',get[6],self.question])
+                        for i in range(get[6]):
+                            self.streaks.append([])
+                            self.points.append([])
+                        self.gui_ready = True
+                        time.sleep(1)
+                    if (get[4] == 'multiple_select_quiz') or (get[4] == 'jumble'):
+                        for choice in get[3]:
+                            if choice == 0:
+                                self.datarow[0] += 1
+                            elif choice == 1:
+                                self.datarow[1] += 1
+                            elif choice == 2:
+                                self.datarow[2] += 1
+                            elif choice == 3:
+                                self.datarow[3] += 1
+                    elif get[4] == 'quiz':
+                        if get[3] == 0:
+                            self.datarow[0] += 1
+                        elif get[3] == 1:
+                            self.datarow[1] += 1
+                        elif get[3] == 2:
+                            self.datarow[2] += 1
+                        elif get[3] == 3:
+                            self.datarow[3] += 1
+                    self.queue.put(['gui',None,'answerstat',self.question,self.datarow])
+                elif get[1] == 'data':
+                    self.datarow = [0,0,0,0]
+                    # if get[3] == True:
+                    #     correct = 'correctly'
+                    # elif get[3] == False:
+                    #     correct = 'incorrectly'
+                    # self.queue.put(['gui',get[2],'correct',correct,get[4]])
+                    self.streaks[self.question].append(f'{get[6]} : {get[2]}')
+                    self.points[self.question].append(f'{get[7]} : {get[5]} : {get[2]}')
+                    self.streaks[self.question].sort(reverse=True,key=getfirstnum)
+                    self.points[self.question].sort(key=getfirstnum)
+                    self.queue.put(['gui',None,'streaks',self.streaks[self.question]])
+                    self.queue.put(['gui',None,'points',self.points[self.question]])
+                elif get[1] == 'leave':
+                    self.active_bots.remove(get[2])
+                    self.quizid = get[3]
+                    if len(self.active_bots) == 0:
+                        self.queue.put(['gui',None,'end',self.quizid])
+                        sys.exit()
             else:
                 self.queue.put(get)
-
-    def put_queue(self,data):
-        data = json.dumps(data)
-        data = json.loads(data)
-        data_content = json.loads(data['content'])
-        if data['id'] == 4:
-            self.queue.put(['gui',None,'end'])
-        if data['id'] == 2:
-            self.queue.put(['gui',None,'next'])
-            question_num = data_content["questionIndex"]
-            answers = data_content["quizQuestionAnswers"]
-            foo = answers[question_num]-1
-            if data_content['gameBlockType'] == 'multiple_select_quiz':
-                type = 'multi'
-            elif data_content['gameBlockType'] == 'jumble':
-                type = 'jumble'
-            elif data_content['gameBlockType'] == 'open_ended':
-                type = 'open'
-            else:
-                type = 'quiz'
-            self.queue.put(['gui',None,'index',question_num,len(answers)])
-            for name in self.bot_names:
-                self.queue.put([name,foo,type])
-
     def run(self):
-        if self.connect() == 'success':
-            put = ['gui',f'mothership({self.name})','join']
-            self.queue.put(put)
-            self.thread.start()
-            self.maintain_connection()
-        else:
-            print('bad')
-            sys.exit()
+        self.getbotdata()
 
 class bot:
 
@@ -139,7 +97,6 @@ class bot:
         self.token = ''
         self.clientId = ''
         self.queue = queue
-        self.thread = Thread(target=self.maintain_connection)
         self.epoch = int(datetime.datetime.now().strftime("%s"))
 
     def connect(self):
@@ -159,7 +116,7 @@ class bot:
         except:
             return 'error'
 
-    def maintain_connection(self):
+    def connected(self):
         self.subId += 1
         self.s.post(self.url,data=first_con_payload(self.ackId,self.clientId,self.subId))
         while True:
@@ -171,52 +128,60 @@ class bot:
                 if x['channel'] == "/service/player":
                     data = json.dumps(x['data'])
                     data = json.loads(data)
-                    if data['id'] == 8:
+                    if data['id'] == 3:
+                        data_content = json.loads(data['content'])
+                        quizid = data_content['quizId']
+                        wait()
+                        self.queue.put(['gui',self.name,'leave'])
+                        self.queue.put(['manager','leave',self.name,quizid])
+                        sys.exit()
+                    elif data['id'] == 2:
+                        data_content = json.loads(data['content'])
+                        question_num = data_content["questionIndex"]
+                        answers = data_content["quizQuestionAnswers"]
+                        foo = answers[question_num]-1
+                        type = data_content['gameBlockType']
+                        self.answer_question([foo,type,question_num,len(answers)])
+                    elif data['id'] == 8:
                         data_content = json.loads(data['content'])
                         pointsdata = data_content['pointsData']
                         streakdata = pointsdata['answerStreakPoints']
                         try:
                             correct = data_content['isCorrect']
                         except:
-                            correct = None
-                        self.queue.put(['mothership',self.name,correct,data_content['totalScore'],pointsdata['questionPoints'],streakdata['streakLevel']])
+                            correct = True
+                        self.queue.put(['manager','data',self.name,correct,pointsdata['questionPoints'],data_content['totalScore'],streakdata['streakLevel'],data_content['rank']])
+                    elif data['id'] == 4:
+                        break
                 else:
                     continue
 
-
-    def answer_question(self):
-        while True:
-            if self.queue.empty() == False:
-                get = self.queue.get()
-                if get[0] != self.name:
-                    self.queue.put(get)
-                    continue
-                foo = get[1]
-                type = get[2]
-                if type == 'multi':
-                    choice = [*range(foo+1)]
-                    random.shuffle(choice)
-                    for i in range(0,random.randint(0,foo)):
-                        del choice[-1]
-                    choice.sort()
-                elif type == 'jumble':
-                    choice = [*range(4)]
-                    random.shuffle(choice)
-                elif type == 'open':
-                    choice = randomString(random.randint(0,20))
-                else:
-                    choice = random.randint(0,foo)
-                put = ['gui',self.name,'answer',choice,self.name,type]
-                self.queue.put(put)
-                #wait()
-                self.s.post(self.url,data=answer_payload(self.pin,self.clientId,self.subId,choice,type))
+    def answer_question(self,get):
+        foo, type, index, amount = get
+        if type == 'multiple_select_quiz':
+            choice = [*range(foo+1)]
+            random.shuffle(choice)
+            for i in range(0,random.randint(0,foo)):
+                del choice[-1]
+            choice.sort()
+        elif type == 'jumble':
+            choice = [*range(4)]
+            random.shuffle(choice)
+        elif type == 'open_ended':
+            choice = randomString(random.randint(0,20))
+        else:
+            choice = random.randint(0,foo)
+            type = 'quiz'
+        self.queue.put(['manager','answer',self.name,choice,type,index,amount])
+        wait()
+        self.s.post(self.url,data=answer_payload(self.pin,self.clientId,self.subId,choice,type))
 
     def run(self):
         while True:
             if self.connect() == 'success':
                 self.queue.put(['gui',self.name,'join'])
-                self.thread.start()
-                self.answer_question()
+                self.connected()
+                break
             else:
                 self.queue.put(['gui',self.name,'fail'])
                 wait()
