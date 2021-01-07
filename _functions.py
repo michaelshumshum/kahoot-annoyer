@@ -19,13 +19,10 @@ def gen_names(prefix,count):
     return names
 
 def wait():
-    wait = random.randint(1,50) / 10
+    wait = random.randint(1,25) / 10
     time.sleep(wait)
 
-def getints(list):
-    new = []
-    for item in list:
-        for word in item.split():
-            if word.isdigit():
-                new.append(word)
+def getfirstnum(string):
+    end = string.find(' : ')
+    new = int(string[:end])
     return new
