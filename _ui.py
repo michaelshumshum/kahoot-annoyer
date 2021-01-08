@@ -2,9 +2,10 @@ import os
 import npyscreen
 import datetime
 import random
+import shutil
 from time import sleep
 
-rows, columns = os.popen('stty size').read().split()
+rows, columns = shutil.get_terminal_size()
 rows = int(rows)
 columns = int(columns)
 
