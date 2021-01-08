@@ -5,10 +5,6 @@ import random
 import shutil
 from time import sleep
 
-rows, columns = shutil.get_terminal_size()
-rows = int(rows)
-columns = int(columns)
-
 class status(npyscreen.BoxTitle):
     _contained_widget = npyscreen.SimpleGrid
     entry_widget = npyscreen.SimpleGrid
@@ -35,9 +31,7 @@ class Form(npyscreen.Form):
         self.count = ''
         self.mothership = ''
 
-        rows, columns = os.popen('stty size').read().split()
-        self.rows = int(rows)
-        self.columns = int(columns)
+	self.columns, self.rows = shutil.get_terminal_size()
 
         self.lh = self.rows-17
         self.sw = int(self.columns/3)
