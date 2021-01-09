@@ -29,10 +29,7 @@ class Form(npyscreen.Form):
         self.question = 'X'
         self.totalquestions = 'X'
         self.count = ''
-        self.mothership = ''
-
 	self.columns, self.rows = shutil.get_terminal_size()
-
         self.lh = self.rows-17
         self.sw = int(self.columns/3)
         self.qw = self.columns-self.sw-5
