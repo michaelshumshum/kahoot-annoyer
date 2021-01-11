@@ -2,6 +2,7 @@ import os
 os.popen('reset')
 import time
 import sys
+import datetime
 from threading import *
 from pyfiglet import Figlet
 import queue
@@ -41,6 +42,12 @@ while True:
         if prefix == '':
             prefix = 'bot'
 
+    epoch = int(datetime.datetime.now().strftime("%s"))
+    r = requests.get(f'https://kahoot.it/reserve/session/{pin}/?{epoch}')
+    if r.status_code != 200:
+        print('Incorrect PIN')
+        continue
+
     names = gen_names(prefix,count)
     ids = []
     for i in range(count):
@@ -49,7 +56,7 @@ while True:
 
 def guifunc(*args):
     global active
-    f = Form(name='kahoot-annoyer')
+    f = Form(name='kahoot-annoyer',FIX_MINIMUM_SIZE_WHEN_CREATED=False)
     f.update_values(q)
 def wrapper(q):
     npyscreen.wrapper_basic(guifunc)
@@ -71,27 +78,23 @@ quizid = ''
 
 thread = Thread(target=main_thread,args=(q,),name='main')
 threads.append(thread)
-print(f'Started thread {thread}')
 thread.start()
 
 manager = manager(queue=q,bot_names=names)
 thread = Thread(target=manager.run,name='bot-manager')
 threads.append(thread)
-print(f'Started thread {thread}')
 thread.start()
 
 for i in range(count):
     f_bot = bot(name=names[i],pin=pin,ackId=ids[i],queue=q)
     thread = Thread(target=f_bot.run,name=names[i])
     threads.append(thread)
-    print(f'Started thread {thread}')
     thread.start()
     time.sleep(0.01)
 
 q.put(['gui',count,'init',pin,names[-1]])
 thread = Thread(target=wrapper,args=(q,),name='gui')
 threads.append(thread)
-print(f'Started thread {thread}')
 thread.start()
 
 for thread in threads:
