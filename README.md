@@ -10,7 +10,9 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 - comes with a pretty neat terminal interface that shows some information about the bots.
 - i also included a brute-force kahoot-code searcher that can search the entire world for active kahoot games. though, keep in mind that not all the games are joinable due to latency. 
 - with this method of injecting bots, there is no character limit for the names.
-NEW:
+
+#NEW:
+
 you can now style the names with different unicode characters. the script will randomly "style" each of the bot's names with a new unicode characters. though, this doesn't bypass the name profanity filter as this was patched a while ago. still, quite a neat feature.
 
 i also added a new overflow "exploit". when enabling glitch names, the bots' names will be replaced b high densit unicode character strings that are very large in length. when the bots join, the host will experience lots of lag and will become quite buggy. if the bots join before the start of the game, the game becomes extremely unresponsive for a while. when going through the questions, displaying the names on screen will also lag the game a little bit and take up lots of space on the screen. the best outcome of this feature is that the host becomes unable to send requests to the players with important data such as their score, whether they got the question right, and ranking. this also means the bots themselves do not receive this information. as such, players will not be able to view their score and any other related information, which could be quite frustrating. side effects of this is that the interface/gui gets broken and the bots will not know how to leave the game themselves.
