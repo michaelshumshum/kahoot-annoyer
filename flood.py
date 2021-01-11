@@ -44,6 +44,7 @@ while True:
     style = input('Add style to the names (y/n):')
     if style == 'y':
         style = True
+        glitchname = False
     else:
         style = False
         glitchname = input('Glitched names (y/n):')
