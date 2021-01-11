@@ -11,7 +11,7 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 - i also included a brute-force kahoot-code searcher that can search the entire world for active kahoot games. though, keep in mind that not all the games are joinable due to latency. 
 - with this method of injecting bots, there is no character limit for the names.
 
-#NEW:
+**NEW:**
 
 you can now style the names with different unicode characters. the script will randomly "style" each of the bot's names with a new unicode characters. though, this doesn't bypass the name profanity filter as this was patched a while ago. still, quite a neat feature.
 
