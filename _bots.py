@@ -15,12 +15,16 @@ class manager:
     def __init__(self,queue,bot_names):
         self.bot_names = bot_names
         self.active_bots = bot_names
+        self.answered_bots = 0
+        self.counter = 0
+        self.counter_max = int(len(bot_names)/16)
         self.quizid = ''
         self.queue = queue
         self.thread = Thread(target=self.getbotdata)
         self.streaks = []
         self.points = []
         self.question = 0
+        self.startedq = False
         self.datarow = [0,0,0,0]
         self.gui_ready = False
 
@@ -31,8 +35,13 @@ class manager:
             get = self.queue.get()
             if get[0] == 'manager':
                 if get[1] == 'answer':
+                    self.counter += 1
+                    self.answered_bots += 1
                     if get[5] != self.question:
                         self.question = get[5]
+                        if self.question == 0:
+                            self.question = 1
+                        self.startedq = True
                         self.queue.put(['gui',None,'index',self.question])
                     if self.gui_ready == False:
                         self.queue.put(['gui',None,'nums',get[6],self.question])
@@ -60,20 +69,32 @@ class manager:
                             self.datarow[2] += 1
                         elif get[3] == 3:
                             self.datarow[3] += 1
-                    self.queue.put(['gui',None,'answerstat',self.question,self.datarow])
+                    if (self.counter >= self.counter_max) or (self.answered_bots >= len(self.bot_names) - self.counter_max):
+                        self.queue.put(['gui',None,'answerstat',self.question,self.datarow])
+                        self.counter = 0
                 elif get[1] == 'data':
+                    self.answered_bots -= 1
+                    self.counter += 1
+                    if self.startedq == True:
+                        self.queue.put(['gui',None,'done index'])
+                        self.startedq = False
                     self.datarow = [0,0,0,0]
                     # if get[3] == True:
                     #     correct = 'correctly'
                     # elif get[3] == False:
                     #     correct = 'incorrectly'
                     # self.queue.put(['gui',get[2],'correct',correct,get[4]])
-                    self.streaks[self.question].append(f'{get[6]} : {get[2]}')
-                    self.points[self.question].append(f'{get[7]} : {get[5]} : {get[2]}')
-                    self.streaks[self.question].sort(reverse=True,key=getfirstnum)
-                    self.points[self.question].sort(key=getfirstnum)
-                    self.queue.put(['gui',None,'streaks',self.streaks[self.question]])
-                    self.queue.put(['gui',None,'points',self.points[self.question]])
+                    try:
+                        self.streaks[self.question].append(f'{get[6]} : {get[2]}')
+                        self.points[self.question].append(f'{get[7]} : {get[5]} : {get[2]}')
+                        self.streaks[self.question].sort(reverse=True,key=getfirstnum)
+                        self.points[self.question].sort(key=getfirstnum)
+                    except:
+                        pass
+                    if (self.counter >= self.counter_max) or (self.answered_bots <= self.counter_max):
+                        self.queue.put(['gui',None,'streaks',self.streaks[self.question]])
+                        self.queue.put(['gui',None,'points',self.points[self.question]])
+                        self.counter = 0
                 elif get[1] == 'leave':
                     self.active_bots.remove(get[2])
                     self.quizid = get[3]
@@ -183,5 +204,4 @@ class bot:
                 self.connected()
                 break
             else:
-                self.queue.put(['gui',self.name,'fail'])
                 wait()
