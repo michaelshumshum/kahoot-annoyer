@@ -38,7 +38,7 @@ class Form(npyscreen.Form):
         self.highest = None
         self.lowest = None
 
-        self.s_values = [['PIN',self.pin],['Connected Bots',f'{self.num}/{self.count}'],['Mothership Name',self.mothership],['Longest Streak',self.longest],['Top Ranking',self.highest],['Lowest Ranking',self.lowest]]
+        self.s_values = [['PIN',self.pin],['Connected Bots',f'{self.num}/{self.count}'],['Current Question',f'{self.question}/{self.totalquestions}'],['Longest Streak',self.longest],['Top Ranking',self.highest],['Lowest Ranking',self.lowest]]
         self.q_values = [['Question','Red','Blue','Yellow','Green']]
 
         self.dateTime_widget = self.add(dateTime,editable=False,max_height=3)
