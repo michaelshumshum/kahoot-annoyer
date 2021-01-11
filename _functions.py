@@ -1,6 +1,7 @@
 import string
 import random
 import time
+from _longname import *
 
 def enum(sequence,start=0):
     n = start
