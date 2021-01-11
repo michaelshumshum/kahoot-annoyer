@@ -18,7 +18,7 @@ def gen_names(prefix,count,style,longname):
     digits = list(string.digits)
     for i in range(0,count):
         if longname == True:
-            prefix = ''.join(random.sample(prefix,len(prefix)))
+            prefix = ''.join(random.sample(longname(),len(longname())))
         names.append(prefix+'_'+randomString(5))
     if style == True:
         for name in names:
