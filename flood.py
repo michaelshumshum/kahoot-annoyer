@@ -49,7 +49,6 @@ while True:
         style = False
         glitchname = input('Glitched names (y/n):')
         if glitchname == 'y':
-            prefix = longname()
             glitchname = True
         else:
             glitchname = False
