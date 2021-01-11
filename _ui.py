@@ -29,7 +29,7 @@ class Form(npyscreen.Form):
         self.question = 'X'
         self.totalquestions = 'X'
         self.count = ''
-	self.columns, self.rows = shutil.get_terminal_size()
+        self.columns, self.rows = shutil.get_terminal_size()
         self.lh = self.rows-17
         self.sw = int(self.columns/3)
         self.qw = self.columns-self.sw-5
@@ -89,12 +89,18 @@ class Form(npyscreen.Form):
                     elif get[2] == 'streaks':
                         #self.logs_widget.values.append(f'Streaks : {get[3]}')
                         data = get[3]
-                        self.longest = data[0]
+                        try:
+                            self.longest = data[0]
+                        except:
+                            pass
                     elif get[2] == 'points':
                         #self.logs_widget.values.append(f'Points : {get[3]}')
                         data = get[3]
-                        self.highest = '#'+data[0]
-                        self.lowest = '#'+data[-1]
+                        try:
+                            self.highest = '#'+data[0]
+                            self.lowest = '#'+data[-1]
+                        except:
+                            pass
                     elif get[2] == 'init':
                         self.count = get[1]
                         self.pin = get[3]
@@ -121,6 +127,8 @@ class Form(npyscreen.Form):
                     elif get[2] == 'index':
                         self.question = get[3]+1
                         self.logs_widget.values.append(f'Started question #{self.question}.')
+                    elif get[2] == 'done index':
+                        self.logs_widget.values.append(f'Ended question #{self.question}.')
                     #Apply values to widgets
                     self.s_values = [['PIN',self.pin],['Connected Bots',f'{self.num}/{self.count}'],['Current Question',f'{self.question}/{self.totalquestions}'],['Longest Streak',self.longest],['Top Ranking',self.highest],['Lowest Ranking',self.lowest]]
                     self.status_widget.values = self.s_values
