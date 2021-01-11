@@ -41,19 +41,29 @@ while True:
         prefix = input('Custom name (leave blank if no):')
         if prefix == '':
             prefix = 'bot'
-
+    style = input('Add style to the names (y/n):')
+    if style == 'y':
+        style = True
+    else:
+        style = False
+        glitchname = input('Glitched names (y/n):')
+        if glitchname == 'y':
+            prefix = longname()
+            glitchname = True
+        else:
+            glitchname = False
     epoch = int(datetime.datetime.now().strftime("%s"))
     r = requests.get(f'https://kahoot.it/reserve/session/{pin}/?{epoch}')
     if r.status_code != 200:
         print('Incorrect PIN')
         continue
+    names = gen_names(prefix,count,style,glitchname)
 
-    names = gen_names(prefix,count)
     ids = []
     for i in range(count):
         ids.append(i)
     break
-
+    
 def guifunc(*args):
     global active
     f = Form(name='kahoot-annoyer',FIX_MINIMUM_SIZE_WHEN_CREATED=False)
