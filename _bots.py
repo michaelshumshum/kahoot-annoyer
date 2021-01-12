@@ -4,7 +4,6 @@ import datetime
 import queue
 import random
 import sys
-from threading import *
 
 from _token import *
 from _payload import *
@@ -20,7 +19,6 @@ class manager:
         self.counter_max = int(len(bot_names)/16)
         self.quizid = ''
         self.queue = queue
-        self.thread = Thread(target=self.getbotdata)
         self.streaks = []
         self.points = []
         self.question = 0
