@@ -5,7 +5,7 @@ literally flood kahoot.it games with bots.
 inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) and [theusaf's kahootPy](https://github.com/theusaf/KahootPY)
 
 ## cool features
-- flood kahoot.it games with lots of bots. the beefier your computer, the more bots. from my testing on my touchbar macbook pro, i could easily get 200+ bots.
+- flood kahoot.it games with lots of bots. the beefier your computer, the more bots. from my testing on my touchbar macbook pro, i could easily get 500+ bots.
 - the bots can answer every single type of question possible on a quiz, including multiselection, jumble, and open-ended. for the multiple-choice questions, the bots will choose random answers, while with open-ended, will input a random string of text.
 - comes with a pretty neat terminal interface that shows some information about the bots.
 - i also included a brute-force kahoot-code searcher that can search the entire world for active kahoot games. though, keep in mind that not all the games are joinable due to latency. 
@@ -16,6 +16,10 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 you can now style the names with different unicode characters. the script will randomly "style" each of the bot's names with a new unicode characters. though, this doesn't bypass the name profanity filter as this was patched a while ago. still, quite a neat feature.
 
 i also added a new overflow "exploit". when enabling glitch names, the bots' names will be replaced with high density unicode character strings that are long in length. when the bots join, the host will experience lots of lag and will become quite buggy. if the bots join before the start of the game, the game becomes extremely unresponsive for a while. when going through the questions, displaying the names on screen will also lag the game a little bit and take up lots of space on the screen. the best outcome of this feature is that the host becomes unable to send requests to the players with important data such as their score, whether they got the question right, and ranking. this also means the bots themselves do not receive this information. as such, players will not be able to view their score and any other related information, which could be quite frustrating. side effects of this is that the interface/gui gets broken and the bots will not know how to leave the game themselves.
+
+**DISCLAIMER:**
+
+when using glitched names, please only at most put a quarter of the maximum your can run usually. for example, if you can usually inject 512 bots, only use 128 when doing glith named bots. if you put in too many bots, your computer will likely crash or become unresponsive. 
 
 ## prerequisites
 - python 3.x
