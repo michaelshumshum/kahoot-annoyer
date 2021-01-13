@@ -96,9 +96,8 @@ class manager:
                 elif get[1] == 'leave':
                     self.active_bots.remove(get[2])
                     self.quizid = get[3]
-                    if len(self.active_bots) < len(self.bot_names):
-                        self.queue.put(['gui',None,'end',self.quizid])
-                        sys.exit()
+                    self.queue.put(['gui',None,'end',self.quizid])
+                    sys.exit()
             else:
                 self.queue.put(get)
     def run(self):
