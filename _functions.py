@@ -45,7 +45,7 @@ def gen_names(prefix,count,style,longname):
     return names
 
 def wait():
-    wait = random.randint(1,25) / 10
+    wait = random.randint(1,100) / 10
     time.sleep(wait)
 
 def getfirstnum(string):

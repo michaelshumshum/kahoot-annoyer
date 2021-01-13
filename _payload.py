@@ -3,7 +3,7 @@ import time
 import random
 
 def lag():
-    return random.randint(50,400)
+    return random.randint(50,500)
 
 def get_tc():
   return int(time.time() * 1000)

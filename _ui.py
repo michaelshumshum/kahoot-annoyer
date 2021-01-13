@@ -1,4 +1,3 @@
-import os
 import npyscreen
 import datetime
 import random
@@ -104,7 +103,6 @@ class Form(npyscreen.Form):
                     elif get[2] == 'init':
                         self.count = get[1]
                         self.pin = get[3]
-                        self.mothership = get[4]
                     elif get[2] == 'leave':
                         self.num -= 1
                         self.logs_widget.values.append(f'<{self.num}/{self.count}> {get[1]} left.')

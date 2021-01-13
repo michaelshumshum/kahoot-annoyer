@@ -1,5 +1,3 @@
-import os
-os.popen('reset')
 import time
 import sys
 import datetime
@@ -63,7 +61,7 @@ while True:
     for i in range(count):
         ids.append(i)
     break
-    
+
 def guifunc(*args):
     global active
     f = Form(name='kahoot-annoyer',FIX_MINIMUM_SIZE_WHEN_CREATED=False)
@@ -102,7 +100,7 @@ for i in range(count):
     thread.start()
     time.sleep(0.01)
 
-q.put(['gui',count,'init',pin,names[-1]])
+q.put(['gui',count,'init',pin])
 thread = Thread(target=wrapper,args=(q,),name='gui')
 threads.append(thread)
 thread.start()

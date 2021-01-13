@@ -1,4 +1,4 @@
-import os
+import sys
 import requests
 import datetime
 import queue
@@ -96,7 +96,7 @@ class manager:
                 elif get[1] == 'leave':
                     self.active_bots.remove(get[2])
                     self.quizid = get[3]
-                    if len(self.active_bots) < len(self.bot_names:
+                    if len(self.active_bots) < len(self.bot_names):
                         self.queue.put(['gui',None,'end',self.quizid])
                         sys.exit()
             else:
