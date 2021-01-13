@@ -15,11 +15,17 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 
 you can now style the names with different unicode characters. the script will randomly "style" each of the bot's names with a new unicode characters. though, this doesn't bypass the name profanity filter as this was patched a while ago. still, quite a neat feature.
 
-i also added a new overflow "exploit". when enabling glitch names, the bots' names will be replaced with high density unicode character strings that are long in length. when the bots join, the host will experience lots of lag and will become quite buggy. if the bots join before the start of the game, the game becomes extremely unresponsive for a while. when going through the questions, displaying the names on screen will also lag the game a little bit and take up lots of space on the screen. the best outcome of this feature is that the host becomes unable to send requests to the players with important data such as their score, whether they got the question right, and ranking. this also means the bots themselves do not receive this information. as such, players will not be able to view their score and any other related information, which could be quite frustrating. side effects of this is that the interface/gui gets broken and the bots will not know how to leave the game themselves.
+**the next addition is technically a form of a denial of service as it impedes the functionality of the host machine and all of the players connected. please use this wisely and I am not liable for any consequences of this**
+
+i also added a new crashing exploit, called glitch names. when enabling glitch names, the bots' names will be replaced with high density unicode character strings that are long in length. when the bots join, the host will essentially become disabled, with many features becoming unresponsive and experiencing many connection issues. 
+
+if the bots join before the start of the game, the host becomes extremely unresponsive. players in the lobby will be disconnected, telling them that they have lost connection. new players may not be able to join the game. as long as the host processes these "glitched" bots joining, the host is pretty much dysfunctional. they are unable to kick the bots, start the game, or press any buttons on the screen. eventually, the host themselves will also be disconnected and will require the host to restart the process.
+
+when going through the questions, similar effects can be seen. displaying the names on screen will lag the host and take up lots of space on the screen. the host becomes unable to send requests to the players with important data such as their score, whether they got the question right, and ranking. this also means the bots themselves do not receive this information. as such, players will not be able to view their score and any other related information, which could be quite frustrating. the host will receive constant connection issues. many actions become extremely unresponsive, such as proceeding through questions, kicking players, and any other buttons. side effects of this is that the interface/gui gets broken and the bots will not know how to leave the game themselves.
 
 **DISCLAIMER:**
 
-when using glitched names, please only at most put a quarter of the maximum your can run usually. for example, if you can usually inject 512 bots, only use 128 when doing glith named bots. if you put in too many bots, your computer will likely crash or become unresponsive. 
+when using glitched names, please only at most put a quarter of the maximum you can run usually. for example, if you can usually inject 512 bots, only use 128 when doing glitch named bots. if you put in too many bots, your computer will likely crash or become unresponsive. 
 
 ## prerequisites
 - python 3.x
