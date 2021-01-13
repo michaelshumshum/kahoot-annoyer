@@ -85,23 +85,27 @@ threads = []
 quizid = ''
 
 thread = Thread(target=main_thread,args=(q,),name='main')
+thread.setDaemon(True)
 threads.append(thread)
 thread.start()
 
 manager = manager(queue=q,bot_names=names)
 thread = Thread(target=manager.run,name='bot-manager')
+thread.setDaemon(True)
 threads.append(thread)
 thread.start()
 
 for i in range(count):
     f_bot = bot(name=names[i],pin=pin,ackId=ids[i],queue=q)
     thread = Thread(target=f_bot.run,name=names[i])
+    thread.setDaemon(True)
     threads.append(thread)
     thread.start()
     time.sleep(0.01)
 
 q.put(['gui',count,'init',pin])
 thread = Thread(target=wrapper,args=(q,),name='gui')
+thread.setDaemon(True)
 threads.append(thread)
 thread.start()
 
