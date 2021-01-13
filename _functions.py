@@ -13,12 +13,12 @@ def randomString(stringLength):
 	lettersAndDigits = string.ascii_letters + string.digits
 	return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
 
-def gen_names(prefix,count,style,longname):
+def gen_names(prefix,count,style,glitchname):
     names = []
     characters = list(string.ascii_uppercase+string.ascii_lowercase)
     digits = list(string.digits)
     for i in range(0,count):
-        if longname == True:
+        if glitchname == True:
             prefix = ''.join(random.sample(longname(),len(longname())))
         names.append(prefix+'_'+randomString(5))
     if style == True:
