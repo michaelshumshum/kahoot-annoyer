@@ -33,7 +33,7 @@ when using glitched names, please only at most put a quarter of the maximum you 
 - a decent internet connection and computer
 
 ## usage
-download or clone this repositiory to your computer. all files, besides the `README.md` of course, are required.
+download or clone this repository to your computer. all files, besides the `README.md` of course, are required.
 to flood bots, run the `flood.py` script. it will prompt you for the game PIN, the number of bots, and an optional custom name for the bots. alternatively, you can add arguments to when you run the script instead of answering the prompts. though, you will still have to answer the name styling and glitch name prompt no matter what.
 
 (example: `python3 flood.py <PIN> <# of bots> <custom name>`).
@@ -44,8 +44,14 @@ to search for kahoot games, run `search.py`. keep in mind that this script is qu
 
 do not touch any of the scripts with an `_` at the front unless you know what you are doing.
 
+## things I want to do
+- implement a brute force 2 factor authentication method, just in case.
+- bypass the profanity name filter
+- potentially break [this anti-bot script](https://github.com/theusaf/kahoot-antibot)
+- just optimise the code
+
 ## notes
-it is still not perfect and can definetly be improved. there are still a few things i want to add, such as providing more kinds of information in the log box.
+it is still not perfect and can definitely be improved. there are still a few things i want to add, such as providing more kinds of information in the log box.
 feel free to suggest pull requests and identify issues.
 
 i am not liable for any damage caused by the users of my scripts. these scripts most likely break kahoot's TOS (terms of service) and any consequences from misuse or severity are solely the users responsibility.
