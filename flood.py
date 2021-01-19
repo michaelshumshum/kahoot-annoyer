@@ -4,7 +4,6 @@ import datetime
 from threading import *
 from pyfiglet import Figlet
 import queue
-import os
 
 from _token import *
 from _payload import *
