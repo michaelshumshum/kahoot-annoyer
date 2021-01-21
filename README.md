@@ -44,6 +44,10 @@ to search for kahoot games, run `search.py`. keep in mind that this script is qu
 
 do not touch any of the scripts with an `_` at the front unless you know what you are doing.
 
+## known problems
+
+- occassionally, the bots will be hit with a 'too many retries' HTTPS error. unfortunately, there is no way to combat this issue. 
+
 ## things I want to do
 - implement a brute force 2 factor authentication method, just in case.
 - bypass the profanity name filter
