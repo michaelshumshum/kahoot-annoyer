@@ -115,7 +115,7 @@ class bot:
         self.token = ''
         self.clientId = ''
         self.queue = queue
-        self.epoch = int(datetime.datetime.now().strftime("%s"))
+        self.epoch = int(datetime.datetime.now().timestamp())
 
     def connect(self):
         try:

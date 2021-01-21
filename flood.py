@@ -9,6 +9,7 @@ from _token import *
 from _payload import *
 from _functions import *
 from _bots import *
+
 from _ui import *
 
 q = queue.Queue()
@@ -50,7 +51,8 @@ while True:
             glitchname = True
         else:
             glitchname = False
-    epoch = int(datetime.datetime.now().strftime("%s"))
+
+    epoch = int(datetime.datetime.now().timestamp())
     r = requests.get(f'https://kahoot.it/reserve/session/{pin}/?{epoch}')
     if r.status_code != 200:
         print('Incorrect PIN')
