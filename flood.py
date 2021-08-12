@@ -34,8 +34,7 @@ for i in range(len(args)):
 \_| \_/\__,_|_| |_|\___/ \___/ \__| \_| |_|_| |_|_| |_|\___/ \__, |\___|_|   
                                                               __/ |          
                                                              |___/           ''')
-            print('The majority of this open-source code was written by michaelshumshum, and therefore much of this is their copyright.\n')
-            print("Edited by andmagdo to be headless and allow for better commandline support (maybe eventually will make into a website)")
+            print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.")
             print('\n\n')
             print("I'm too lazy to check if you have done a command multiple times, so subsequent arguments will overwrite previous")
             print('\n')
