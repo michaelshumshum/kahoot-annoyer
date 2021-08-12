@@ -1,7 +1,5 @@
-# kahoot-annoyer-headless
+# kahoot-annoyer
 there is no such thing as fun
-
-## Edited to allow headless use
 
 ## about
 literally flood kahoot.it games with bots.
