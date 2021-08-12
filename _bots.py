@@ -3,8 +3,6 @@ import requests
 import datetime
 import queue
 import random
-import sys
-
 from _token import *
 from _payload import *
 from _functions import *
