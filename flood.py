@@ -19,7 +19,7 @@ interactive = False
 prefix = "bot"
 style = False
 glitchname = False
-gui = False
+gui = True
 
 args = argv[1:]
 for i in range(len(args)):
@@ -41,7 +41,7 @@ for i in range(len(args)):
             print('\n')
             print('Required arguments are marked with a *. They are required unless interactive mode is on\n')
             print('-h will bring up this menu\n')
-            print('--gui will turn on the curses gui. Please note, a workaround is required to run this on Windows\n')
+            print('--screen will turn on the curses gui. Please note, a workaround is required to run this on Windows\n')
             print('-i will bring up an interactive prompt for all below arguments\n')
             print('-n will set the name of the bots defaults to "bot" ex: python flood.py -n bot\n')
             print('-b * will set the number of bots, must be an integer (please note, many bots may lag your computer) ex: python flood.py -b 100\n')
@@ -80,9 +80,9 @@ for i in range(len(args)):
                 print(f"INFO: Using {pin} as the code.")
         except ValueError:
             print('WARN: Code must be an integer. Ignoring')
-    if "--gui" in arg:
-        print("INFO: Using gui")
-        gui = True
+    if "--screen" in arg:
+        print("INFO: Headless (no output to screen)")
+        gui = False
 
 
 if (pin and count) or interactive:
@@ -132,6 +132,16 @@ ids = []
 for i in range(count):
     ids.append(i)
 
+if gui:
+    from _ui import *
+    def guifunc(*args):
+        global active
+        f = Form(name='kahoot-annoyer', FIX_MINIMUM_SIZE_WHEN_CREATED=False)
+        f.update_values(q)
+
+
+    def wrapper(q):
+        npyscreen.wrapper_basic(guifunc)
 
 def main_thread(queue):
     while True:
@@ -168,7 +178,11 @@ for i in range(count):
     time.sleep(0.01)
 
 q.put(['gui',count,'init',pin])
+if gui:
+    thread = Thread(target=wrapper, args=(q,), name='gui')
+    thread.setDaemon(True)
 threads.append(thread)
-
+if gui:
+    thread.start()
 for thread in threads:
     thread.join()
