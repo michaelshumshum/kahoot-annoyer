@@ -32,7 +32,8 @@ when using glitched names, please only at most put a quarter of the maximum you 
 
 ## prerequisites
 - python 3.x
-- `pip install npyscreen, python-pyfiglet`
+- for gui:
+- `pip3 install npyscreen`
 - a decent internet connection and computer
 
 ## usage
