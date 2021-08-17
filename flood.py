@@ -3,11 +3,10 @@ from _bots import *
 from sys import argv
 q = queue.Queue()
 
-def Check_code(pin):
+def check_code(pin):
     epoch = int(datetime.datetime.now().timestamp())
     r = requests.get(f'https://kahoot.it/reserve/session/{pin}/?{epoch}')
     if r.status_code != 200:
-        print('Incorrect PIN')
         return False
     return True
 
@@ -26,62 +25,56 @@ for i in range(len(args)):
     arg = args[i-1].lower()
     if "-" in arg:
         if "h" in arg or '--help' in arg:
-            print(r''' _   __      _                 _      ___                                    
-| | / /     | |               | |    / _ \                                   
-| |/ /  __ _| |__   ___   ___ | |_  / /_\ \_ __  _ __   ___  _   _  ___ _ __ 
+            print(r''' _   __      _                 _      ___
+| | / /     | |               | |    / _ \
+| |/ /  __ _| |__   ___   ___ | |_  / /_\ \_ __  _ __   ___  _   _  ___ _ __
 |    \ / _` | '_ \ / _ \ / _ \| __| |  _  | '_ \| '_ \ / _ \| | | |/ _ | '__|
-| |\  | (_| | | | | (_) | (_) | |_  | | | | | | | | | | (_) | |_| |  __| |   
-\_| \_/\__,_|_| |_|\___/ \___/ \__| \_| |_|_| |_|_| |_|\___/ \__, |\___|_|   
-                                                              __/ |          
+| |\  | (_| | | | | (_) | (_) | |_  | | | | | | | | | | (_) | |_| |  __| |
+\_| \_/\__,_|_| |_|\___/ \___/ \__| \_| |_|_| |_|_| |_|\___/ \__, |\___|_|
+                                                              __/ |
                                                              |___/           ''')
-            print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.")
-            print('\n\n')
-            print("I'm too lazy to check if you have done a command multiple times, so subsequent arguments will overwrite previous")
-            print('\n')
-            print('Required arguments are marked with a *. They are required unless interactive mode is on\n')
-            print('-h will bring up this menu\n')
-            print('--screen will turn on the curses gui. Please note, a workaround is required to run this on Windows\n')
-            print('-i will bring up an interactive prompt for all below arguments\n')
-            print('-n will set the name of the bots defaults to "bot" ex: python flood.py -n bot\n')
-            print('-b * will set the number of bots, must be an integer (please note, many bots may lag your computer) ex: python flood.py -b 100\n')
-            print('-c or -p * will set the kahoot code, must be an integer ex: python flood.py -c 9999999\n')
-            print('-s will turn on 𝓈𝓉𝓎𝓁𝑒 (style) for names\n')
-            print('-g will turn on g̵̲͈̠̺̺̃l̴̢͈͙͚̃̽̍̕͘͝i̷̜͛͛̐́̾̃̽t̷͚̠̾͐c̶̢̝̦̩̹̾̄̈̅͆́͜ͅĥ̷̛̺̘̈́̓̏́͒̅y̶̝̙̗͓͍̝͔̰̌͝  (glitchy) names\n')
-            print("You cannot have both styled and glitchy names.")
+            print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.\n")
+            print('required arguments:\n-b: number of bots. depending on hardware, performance may be significantly affected at higher values.\n-p: code for kahoot game.\n')
+            print('optional arguments:\n-h / --help: shows this help information.\n-i: input arguments in an "interactive" fashion.\n-t: disable terminal output.\n-n <name>: set a custom name. by default, name is "bot".\n-s: styled names.\n-g: glitched names (selecting glitched names will override custom name and styled name options).\n')
             exit()
         if "i" in arg:
             print('INFO: Interactive mode on')
             interactive = True
-        if "s" in arg:
-            style = True
-            glitchname = False
-            print("INFO: Adding style to names")
         if "g" in arg:
-            style = False
             glitchname = True
             print("INFO: Adding glitchiness to names")
+        if "t" in arg:
+            print("INFO: Output to terminal is disabled.")
+            gui = False
+        if "s" in arg:
+            if glitchname == False:
+                style = True
+                print("INFO: Adding style to names")
+            else:
+                print("WARN: -s and -g are conflicting arguments. Ignoring -s option.")
     if "-b" in arg:
         try:
             count = int(args[i])
             print(f"INFO: Using {count} bots.")
         except ValueError:
-            print('WARN: Number of bots must be an integer. Ignoring')
+            print('ERR: Number of bots must be an integer.')
+            exit()
     if "-n" in arg:
-        prefix = args[i]
-        print(f"INFO: The bots will be named a derivative of {prefix}.")
-    if "-c" in arg or "-p" in arg:
+        if glitchname == False:
+            prefix = args[i]
+            print(f"INFO: The bots will be named a derivative of {prefix}.")
+        else:
+            print("WARN: -n and -g are conflicting arguments. Ignoring -n option.")
+    if "-p" in arg:
         try:
-            code = int(args[i])
-            if not Check_code(code):
-                print('WARN: Code not valid. Ignoring')
+            pin = int(args[i])
+            if not check_code(pin):
+                raise ValueError
             else:
-                pin = code
                 print(f"INFO: Using {pin} as the code.")
         except ValueError:
-            print('WARN: Code must be an integer. Ignoring')
-    if "--screen" in arg:
-        print("INFO: Headless (no output to screen)")
-        gui = False
+            print('ERR: Code is invalid!')
+            exit()
 
 
 if (pin and count) or interactive:
@@ -92,24 +85,16 @@ else:
 
 if interactive:
     while True:
-        try:
-            prefix = argv[3]
-        except:
+        pin = input('PIN:')
+        while True:
+            try:
+                count = int(input('How many:'))
+                break
+            except:
+                print('Please put a valid number')
+        prefix = input('Custom name (leave blank if no):')
+        if prefix == '':
             prefix = 'bot'
-        try:
-            pin = argv[1]
-            count = int(argv[2])
-        except:
-            pin = input('PIN:')
-            while True:
-                try:
-                    count = int(input('How many:'))
-                    break
-                except:
-                    print('Please put a valid number')
-            prefix = input('Custom name (leave blank if no):')
-            if prefix == '':
-                prefix = 'bot'
         style = input('Add style to the names (y/n):')
         if style == 'y':
             style = True
@@ -122,8 +107,9 @@ if interactive:
             else:
                 glitchname = False
 
-        if not Check_code(pin):
-            continue
+        if not check_code(pin):
+            print('ERR: Missing arguments, use -h for help')
+            exit()
         break
 names = gen_names(prefix,count,style,glitchname)
 

@@ -19,7 +19,7 @@ def gen_names(prefix,count,style,glitchname):
     digits = list(string.digits)
     for i in range(0,count):
         if glitchname == True:
-            prefix = ''.join(random.sample(longname(),len(longname())))
+            prefix = longname()
         names.append(prefix+'_'+randomString(5))
     if style == True:
         for name in names:
