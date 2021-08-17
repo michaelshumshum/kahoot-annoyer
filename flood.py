@@ -1,75 +1,146 @@
-import time
-import sys
-import datetime
 from threading import *
-from pyfiglet import Figlet
-import queue
-
-from _token import *
-from _payload import *
-from _functions import *
 from _bots import *
-
-from _ui import *
-
+from sys import argv
 q = queue.Queue()
 
-f = Figlet(font='ogre')
-time.sleep(1)
-print('==========================================================================')
-print(f.renderText('kahoot annoyer'))
-print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.")
-print('==========================================================================')
-time.sleep(0.5)
-while True:
-    try:
-        prefix = sys.argv[3]
-    except:
-        prefix = 'bot'
-    try:
-        pin = sys.argv[1]
-        count = int(sys.argv[2])
-    except:
-        pin = input('PIN:')
-        while True:
-            try:
-                count = int(input('How many:'))
-                break
-            except:
-                print('Please put a valid number')
-        prefix = input('Custom name (leave blank if no):')
-        if prefix == '':
-            prefix = 'bot'
-    style = input('Add style to the names (y/n):')
-    if style == 'y':
-        style = True
-        glitchname = False
-    else:
-        style = False
-        glitchname = input('Glitched names (y/n):')
-        if glitchname == 'y':
-            glitchname = True
-        else:
-            glitchname = False
-
+def Check_code(pin):
     epoch = int(datetime.datetime.now().timestamp())
     r = requests.get(f'https://kahoot.it/reserve/session/{pin}/?{epoch}')
     if r.status_code != 200:
         print('Incorrect PIN')
-        continue
-    names = gen_names(prefix,count,style,glitchname)
+        return False
+    return True
 
-    ids = []
-    for i in range(count):
-        ids.append(i)
-    break
+#### Command-arguments section ####
 
-def guifunc(*args):
-    global active
-    f = Form(name='kahoot-annoyer',FIX_MINIMUM_SIZE_WHEN_CREATED=False)
-    f.update_values(q)
-def wrapper(q):
-    npyscreen.wrapper_basic(guifunc)
+pin = None
+count = None
+interactive = False
+prefix = "bot"
+style = False
+glitchname = False
+gui = True
+
+args = argv[1:]
+for i in range(len(args)):
+    arg = args[i-1].lower()
+    if "-" in arg:
+        if "h" in arg or '--help' in arg:
+            print(r''' _   __      _                 _      ___                                    
+| | / /     | |               | |    / _ \                                   
+| |/ /  __ _| |__   ___   ___ | |_  / /_\ \_ __  _ __   ___  _   _  ___ _ __ 
+|    \ / _` | '_ \ / _ \ / _ \| __| |  _  | '_ \| '_ \ / _ \| | | |/ _ | '__|
+| |\  | (_| | | | | (_) | (_) | |_  | | | | | | | | | | (_) | |_| |  __| |   
+\_| \_/\__,_|_| |_|\___/ \___/ \__| \_| |_|_| |_|_| |_|\___/ \__, |\___|_|   
+                                                              __/ |          
+                                                             |___/           ''')
+            print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.")
+            print('\n\n')
+            print("I'm too lazy to check if you have done a command multiple times, so subsequent arguments will overwrite previous")
+            print('\n')
+            print('Required arguments are marked with a *. They are required unless interactive mode is on\n')
+            print('-h will bring up this menu\n')
+            print('--screen will turn on the curses gui. Please note, a workaround is required to run this on Windows\n')
+            print('-i will bring up an interactive prompt for all below arguments\n')
+            print('-n will set the name of the bots defaults to "bot" ex: python flood.py -n bot\n')
+            print('-b * will set the number of bots, must be an integer (please note, many bots may lag your computer) ex: python flood.py -b 100\n')
+            print('-c or -p * will set the kahoot code, must be an integer ex: python flood.py -c 9999999\n')
+            print('-s will turn on 𝓈𝓉𝓎𝓁𝑒 (style) for names\n')
+            print('-g will turn on g̵̲͈̠̺̺̃l̴̢͈͙͚̃̽̍̕͘͝i̷̜͛͛̐́̾̃̽t̷͚̠̾͐c̶̢̝̦̩̹̾̄̈̅͆́͜ͅĥ̷̛̺̘̈́̓̏́͒̅y̶̝̙̗͓͍̝͔̰̌͝  (glitchy) names\n')
+            print("You cannot have both styled and glitchy names.")
+            exit()
+        if "i" in arg:
+            print('INFO: Interactive mode on')
+            interactive = True
+        if "s" in arg:
+            style = True
+            glitchname = False
+            print("INFO: Adding style to names")
+        if "g" in arg:
+            style = False
+            glitchname = True
+            print("INFO: Adding glitchiness to names")
+    if "-b" in arg:
+        try:
+            count = int(args[i])
+            print(f"INFO: Using {count} bots.")
+        except ValueError:
+            print('WARN: Number of bots must be an integer. Ignoring')
+    if "-n" in arg:
+        prefix = args[i]
+        print(f"INFO: The bots will be named a derivative of {prefix}.")
+    if "-c" in arg or "-p" in arg:
+        try:
+            code = int(args[i])
+            if not Check_code(code):
+                print('WARN: Code not valid. Ignoring')
+            else:
+                pin = code
+                print(f"INFO: Using {pin} as the code.")
+        except ValueError:
+            print('WARN: Code must be an integer. Ignoring')
+    if "--screen" in arg:
+        print("INFO: Headless (no output to screen)")
+        gui = False
+
+
+if (pin and count) or interactive:
+    pass
+else:
+    print('ERR: Missing arguments, use -h for help')
+    exit()
+
+if interactive:
+    while True:
+        try:
+            prefix = argv[3]
+        except:
+            prefix = 'bot'
+        try:
+            pin = argv[1]
+            count = int(argv[2])
+        except:
+            pin = input('PIN:')
+            while True:
+                try:
+                    count = int(input('How many:'))
+                    break
+                except:
+                    print('Please put a valid number')
+            prefix = input('Custom name (leave blank if no):')
+            if prefix == '':
+                prefix = 'bot'
+        style = input('Add style to the names (y/n):')
+        if style == 'y':
+            style = True
+            glitchname = False
+        else:
+            style = False
+            glitchname = input('Glitched names (y/n):')
+            if glitchname == 'y':
+                glitchname = True
+            else:
+                glitchname = False
+
+        if not Check_code(pin):
+            continue
+        break
+names = gen_names(prefix,count,style,glitchname)
+
+ids = []
+for i in range(count):
+    ids.append(i)
+
+if gui:
+    from _ui import *
+    def guifunc(*args):
+        global active
+        f = Form(name='kahoot-annoyer', FIX_MINIMUM_SIZE_WHEN_CREATED=False)
+        f.update_values(q)
+
+
+    def wrapper(q):
+        npyscreen.wrapper_basic(guifunc)
 
 def main_thread(queue):
     while True:
@@ -106,10 +177,11 @@ for i in range(count):
     time.sleep(0.01)
 
 q.put(['gui',count,'init',pin])
-thread = Thread(target=wrapper,args=(q,),name='gui')
-thread.setDaemon(True)
+if gui:
+    thread = Thread(target=wrapper, args=(q,), name='gui')
+    thread.setDaemon(True)
 threads.append(thread)
-thread.start()
-
+if gui:
+    thread.start()
 for thread in threads:
     thread.join()
