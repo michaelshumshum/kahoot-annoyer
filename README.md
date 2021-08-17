@@ -12,10 +12,6 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 - i also included a brute-force kahoot-code searcher that can search the entire world for active kahoot games. though, keep in mind that not all the games are joinable due to latency.
 - name styling + glitchy names.
 
-**DISCLAIMER:**
-
-when using glitched names, please only at most put a quarter of the maximum you can run usually. for example, if you can usually inject 512 bots, only use 128 when doing glitch named bots. if you put in too many bots, your computer will likely crash or become unresponsive.
-
 ## prerequisites
 - python 3.x
 - for gui:
@@ -24,7 +20,7 @@ when using glitched names, please only at most put a quarter of the maximum you 
 
 ## usage
 download or clone this repository to your computer. all files, besides the `README.md` of course, are required.
-to flood bots, run the `flood.py` script. it will prompt you for the game PIN, the number of bots, and an optional custom name for the bots. alternatively, you can add arguments to when you run the script instead of answering the prompts. though, you will still have to answer the name styling and glitch name prompt no matter what.
+to flood bots, run the `flood.py` script. you can use the argument system below, or enable `-i` to use an "interactive" prompt to enable certain options.
 
 (example: `python3 flood.py -p 69420 -b 1337 -n MLG -s`).
 ```

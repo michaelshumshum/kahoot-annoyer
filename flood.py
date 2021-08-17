@@ -34,7 +34,8 @@ for i in range(len(args)):
                                                               __/ |
                                                              |___/           ''')
             print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.\n")
-            print('required arguments:\n-b: number of bots. depending on hardware, performance may be significantly affected at higher values.\n-p: code for kahoot game.\n')
+            print('usage: python3 flood.py -p <PIN> -b <# of bots> [optional arguments\n')
+            print('required arguments:\n-b: # of bots. depending on hardware, performance may be significantly affected at higher values.\n-p: code for kahoot game.\n')
             print('optional arguments:\n-h / --help: shows this help information.\n-i: input arguments in an "interactive" fashion.\n-t: disable terminal output.\n-n <name>: set a custom name. by default, name is "bot".\n-s: styled names.\n-g: glitched names (selecting glitched names will override custom name and styled name options).\n')
             exit()
         if "i" in arg:
