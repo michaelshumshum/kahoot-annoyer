@@ -14,8 +14,7 @@ inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) 
 
 ## prerequisites
 - python 3.x
-- for gui:
-- `pip3 install npyscreen`
+- `pip3 install npyscreen requests` or `pip3 install -r requirements.txt`
 - a decent internet connection and computer
 
 ## usage
@@ -37,12 +36,11 @@ optional arguments:
 -n <name>: set a custom name. by default, name is "bot".
 -s: styled names.
 -g: glitched names (selecting glitched names will override styled names when enabled).
+-v: verbose.
 ```
-if you have enable glitched names, you will have to close the script manually by pressing `ctrl + c` and typing `reset` into the terminal to restore it. usually, this is done automatically, but with the glitch names, the host client is unable to send this information to the bots.
+if you have enable glitched names, you will have to close the script manually by pressing `ctrl + c` (or `ctrl +z` if using zsh and want to do it abruptly) and typing `reset` into the terminal to restore it.
 
 to search for kahoot games, run `search.py`. keep in mind that this script is quite resource heavy and doesn't ensure you can join those games, only provides you with codes for active games. though, due to the large amounts of codes you get, you can get lucky with a code that has a good connection.
-
-do not touch any of the scripts with an `_` at the front unless you know what you are doing.
 
 ## known problems
 
