@@ -45,8 +45,8 @@ class Form(npyscreen.Form):
         self.questions_widget = self.add(questions,editable=False,max_width=self.qw,relx=self.sw+2,rely=-(self.rows-5),contained_widget_arguments={'column_width' : int((self.qw-5)/6)})
         self.logs_widget = self.add(logs,editable=False,max_width=self.sw,rely=13,values=['START'])
 
-    def update_values(self,queue):
-        while True:
+    def update_values(self,queue,event):
+        while event.is_set():
             #Update time
             date_obj = datetime.datetime.now()
 

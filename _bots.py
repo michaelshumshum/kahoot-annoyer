@@ -9,7 +9,7 @@ from _functions import *
 
 class manager:
 
-    def __init__(self,queue,bot_names):
+    def __init__(self,queue,bot_names,event):
         self.bot_names = bot_names
         self.active_bots = bot_names
         self.answered_bots = 0
@@ -17,6 +17,7 @@ class manager:
         self.counter_max = int(len(bot_names)/16)
         self.quizid = ''
         self.queue = queue
+        self.event = event
         self.streaks = []
         self.points = []
         self.question = 0
@@ -27,7 +28,7 @@ class manager:
 #['manager','data',self.name,correct,pointsdata['questionPoints'],data_content['totalScore'],streakdata['streakLevel'],data_content['rank']]
 #['manager','answer',self.name,choice,type,index,amount]
     def getbotdata(self):
-        while True:
+        while self.event.is_set():
             get = self.queue.get()
             if get[0] == 'manager':
                 if get[1] == 'answer':
@@ -103,7 +104,7 @@ class manager:
 
 class bot:
 
-    def __init__(self, pin, name, ackId, queue):
+    def __init__(self, pin, name, ackId, queue, event):
         self.pin = pin
         self.name = name
         self.s = requests.Session()
@@ -113,6 +114,7 @@ class bot:
         self.token = ''
         self.clientId = ''
         self.queue = queue
+        self.event = event
         self.epoch = int(datetime.datetime.now().timestamp())
 
     def connect(self):
@@ -135,9 +137,11 @@ class bot:
     def connected(self):
         self.subId += 1
         self.s.post(self.url,data=first_con_payload(self.ackId,self.clientId,self.subId))
-        while True:
+        while self.event.is_set():
             self.subId += 1
             r = self.s.post(self.url,data=second_con_payload(self.ackId,self.clientId,self.subId))
+            if not self.event.is_set():
+                break
             response = json.loads(r.text)
             if len(response) > 0:
               for i,x in enum(response):

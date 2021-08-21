@@ -1,7 +1,10 @@
-from threading import *
+from threading import Thread, Event
 from _bots import *
 from sys import argv
+from contextlib import suppress
 q = queue.Queue()
+e = Event()
+e.set()
 
 def check_code(pin):
     epoch = int(datetime.datetime.now().timestamp())
@@ -19,6 +22,7 @@ prefix = "bot"
 style = False
 glitchname = False
 gui = True
+verbose = False
 
 args = argv[1:]
 for i in range(len(args)):
@@ -33,24 +37,27 @@ for i in range(len(args)):
 \_| \_/\__,_|_| |_|\___/ \___/ \__| \_| |_|_| |_|_| |_|\___/ \__, |\___|_|
                                                               __/ |
                                                              |___/           ''')
-            print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit. You may need to reset the screen if the terminal gets messed up.\n")
-            print('usage: python3 flood.py -p <PIN> -b <# of bots> [optional arguments\n')
+            print("Created by michaelshumshum\nBased on msemple's kahoot-hack and theusaf's kahootPY\nPress ctrl+c to exit or ctr+z to immediately abort. You may need to reset the screen if the terminal gets messed up.\n")
+            print('usage: python3 flood.py -p <PIN> -b <# of bots> [optional arguments]\n')
             print('required arguments:\n-b: # of bots. depending on hardware, performance may be significantly affected at higher values.\n-p: code for kahoot game.\n')
-            print('optional arguments:\n-h / --help: shows this help information.\n-i: input arguments in an "interactive" fashion.\n-t: disable terminal output.\n-n <name>: set a custom name. by default, name is "bot".\n-s: styled names.\n-g: glitched names (selecting glitched names will override custom name and styled name options).\n')
+            print('optional arguments:\n-h / --help: shows this help information.\n-i: input arguments in an "interactive" fashion.\n-t: disable terminal output.\n-n <name>: set a custom name. by default, name is "bot".\n-s: styled names.\n-g: glitched names (selecting glitched names will override custom name and styled name options).\n-v: verbose.\n')
             exit()
+        if "v" in arg:
+            print('INFO: Verbose mode ON')
+            verbose = True
         if "i" in arg:
-            print('INFO: Interactive mode on')
+            print('INFO: Interactive mode ON')
             interactive = True
         if "g" in arg:
             glitchname = True
-            print("INFO: Adding glitchiness to names")
+            print("INFO: Glitched names ON")
         if "t" in arg:
-            print("INFO: Output to terminal is disabled.")
+            print("INFO: Output to terminal DISABLED.")
             gui = False
         if "s" in arg:
             if glitchname == False:
                 style = True
-                print("INFO: Adding style to names")
+                print("INFO: Styled names ON")
             else:
                 print("WARN: -s and -g are conflicting arguments. Ignoring -s option.")
     if "-b" in arg:
@@ -123,52 +130,64 @@ if gui:
     def guifunc(*args):
         global active
         f = Form(name='kahoot-annoyer', FIX_MINIMUM_SIZE_WHEN_CREATED=False)
-        f.update_values(q)
+        f.update_values(q,e)
 
 
-    def wrapper(q):
+    def wrapper(q,e):
         npyscreen.wrapper_basic(guifunc)
+        e.clear()
+        with suppress(KeyboardInterrupt):
+            raise KeyboardInterrupt
+
+quiz_url = ''
 
 def main_thread(queue):
-    while True:
+    global quiz_url
+    while e.is_set():
         get = queue.get()
         if get[0] != 'main':
             queue.put(get)
         else:
-            time.sleep(2)
-            print('=======================================================')
-            print(f'Quiz URL: https://create.kahoot.it/details/{get[1]}')
-            print('=======================================================')
+            quiz_url = get[1]
             break
 
 threads = []
 quizid = ''
 
 thread = Thread(target=main_thread,args=(q,),name='main')
-thread.setDaemon(True)
 threads.append(thread)
-thread.start()
 
-manager = manager(queue=q,bot_names=names)
+manager = manager(queue=q,bot_names=names,event=e)
 thread = Thread(target=manager.run,name='bot-manager')
-thread.setDaemon(True)
 threads.append(thread)
-thread.start()
 
 for i in range(count):
-    f_bot = bot(name=names[i],pin=pin,ackId=ids[i],queue=q)
+    f_bot = bot(name=names[i],pin=pin,ackId=ids[i],queue=q,event=e)
     thread = Thread(target=f_bot.run,name=names[i])
-    thread.setDaemon(True)
     threads.append(thread)
-    thread.start()
     time.sleep(0.01)
 
-q.put(['gui',count,'init',pin])
 if gui:
-    thread = Thread(target=wrapper, args=(q,), name='gui')
-    thread.setDaemon(True)
-threads.append(thread)
-if gui:
+    q.put(['gui',count,'init',pin])
+    thread = Thread(target=wrapper, args=(q,e,), name='gui')
+    threads.append(thread)
+
+for thread in threads:
     thread.start()
+    print(f'INFO: Thread[{thread.name} - {thread.ident}] started.') if verbose else None
+
+while e.is_set():
+    try:
+        sleep(0.0001)
+        if not e.is_set():
+            e.clear()
+    except KeyboardInterrupt:
+        e.clear()
+        print('done')
+        break
+
 for thread in threads:
     thread.join()
+    print(f'INFO: Thread[{thread.name} - {thread.ident}] killed.') if verbose else None
+
+print(quiz_url)
