@@ -1,8 +1,6 @@
 import sys
 import requests
 import datetime
-import queue
-import random
 from _token import *
 from _payload import *
 from _functions import *
@@ -72,7 +70,7 @@ class manager:
                 elif get[1] == 'data':
                     self.answered_bots -= 1
                     self.counter += 1
-                    if self.startedq == True:
+                    if self.startedq:
                         self.queue.put(['gui',None,'done index'])
                         self.startedq = False
                     self.datarow = [0,0,0,0]
@@ -160,8 +158,8 @@ class bot:
                         question_num = data_content["questionIndex"]
                         answers = data_content["quizQuestionAnswers"]
                         foo = answers[question_num]-1
-                        type = data_content['gameBlockType']
-                        self.answer_question([foo,type,question_num,len(answers)])
+                        gameType = data_content['gameBlockType']
+                        self.answer_question([foo, gameType, question_num, len(answers)])
                     elif data['id'] == 8:
                         data_content = json.loads(data['content'])
                         pointsdata = data_content['pointsData']
@@ -177,24 +175,24 @@ class bot:
                     continue
 
     def answer_question(self,get):
-        foo, type, index, amount = get
-        if type == 'multiple_select_quiz':
+        foo, gameType, index, amount = get
+        if gameType == 'multiple_select_quiz':
             choice = [*range(foo+1)]
             random.shuffle(choice)
             for i in range(0,random.randint(0,foo)):
                 del choice[-1]
             choice.sort()
-        elif type == 'jumble':
+        elif gameType == 'jumble':
             choice = [*range(4)]
             random.shuffle(choice)
-        elif type == 'open_ended':
+        elif gameType == 'open_ended':
             choice = randomString(random.randint(0,20))
         else:
             choice = random.randint(0,foo)
-            type = 'quiz'
-        self.queue.put(['manager','answer',self.name,choice,type,index,amount])
+            gameType = 'quiz'
+        self.queue.put(['manager','answer', self.name, choice, gameType, index, amount])
         wait()
-        self.s.post(self.url,data=answer_payload(self.pin,self.clientId,self.subId,choice,type))
+        self.s.post(self.url, data=answer_payload(self.pin, self.clientId, self.subId, choice, gameType))
 
     def run(self):
         while True:

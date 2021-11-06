@@ -10,18 +10,18 @@ def enum(sequence,start=0):
         n += 1
 
 def randomString(stringLength):
-	lettersAndDigits = string.ascii_letters + string.digits
-	return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
+    lettersAndDigits = string.ascii_letters + string.digits
+    return ''.join(random.choice(lettersAndDigits) for _ in range(stringLength))
 
-def gen_names(prefix,count,style,glitchname):
+def gen_names(prefix,count,style,glitchName):
     names = []
     characters = list(string.ascii_uppercase+string.ascii_lowercase)
     digits = list(string.digits)
     for i in range(0,count):
-        if glitchname == True:
+        if glitchName:
             prefix = longname()
         names.append(prefix+'_'+randomString(5))
-    if style == True:
+    if style:
         for name in names:
             new_name = ''
             c_no = [156,312,260]

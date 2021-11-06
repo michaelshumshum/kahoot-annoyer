@@ -25,12 +25,12 @@ def second_con_payload(ack,clientId,subId):
     data = [{"channel": "/meta/connect", "clientId": clientId, "connectionType": "long-polling", "ext": {"ack": ack, "timesync": {"l": "0", "o": "-14", "tc": get_tc()}}, "id": subId}]
     return str(json.dumps(data))
 
-def answer_payload(pin,clientId,subId,choice,type):
-    if type == 'quiz':
+def answer_payload(pin,clientId,subId,choice,questionType):
+    if questionType == 'quiz':
         choice = int(choice)
         id = 6
         answer = 'choice'
-    elif type == 'open_ended':
+    elif questionType == 'open_ended':
         id = 45
         choice = str(choice)
         answer = 'text'
