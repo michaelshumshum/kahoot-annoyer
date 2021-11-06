@@ -1,6 +1,4 @@
 import base64
-import math
-import json
 import array
 
 def challenge_handle(challenge):

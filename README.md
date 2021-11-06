@@ -6,10 +6,10 @@ literally flood kahoot.it games with bots.
 inspired by [msemple's kahoot-hack](https://github.com/msemple1111/kahoot-hack) and [theusaf's kahootPy](https://github.com/theusaf/KahootPY)
 
 ## cool features
-- flood kahoot.it games with lots of bots. the beefier your computer, the more bots. from my testing on my touchbar macbook pro, i could easily get 500+ bots.
+- flood kahoot.it games with lots of bots. the beefier your computer, the more bots. from my testing on my touchbar macbook pro, I could easily get 500+ bots.
 - the bots can answer every single type of question possible on a quiz, including multiselection, jumble, and open-ended. for the multiple-choice questions, the bots will choose random answers, while with open-ended, will input a random string of text.
 - comes with a pretty neat terminal interface that shows some information about the bots.
-- i also included a brute-force kahoot-code searcher that can search the entire world for active kahoot games. though, keep in mind that not all the games are joinable due to latency.
+- I also included a brute-force kahoot-code searcher that can search the entire world for active kahoot games. though, keep in mind that not all the games are joinable due to latency.
 - name styling + glitchy names.
 
 ## prerequisites
@@ -38,7 +38,7 @@ optional arguments:
 -g: glitched names (selecting glitched names will override styled names when enabled).
 -v: verbose.
 ```
-if you have enable glitched names, you will have to close the script manually by pressing `ctrl + c` (or `ctrl +z` if using zsh and want to do it abruptly) and typing `reset` into the terminal to restore it.
+if you enable glitched names, you will have to close the script manually by pressing `ctrl + c` (or `ctrl +z` if using zsh and want to do it abruptly) and typing `reset` into the terminal to restore it.
 
 to search for kahoot games, run `search.py`. keep in mind that this script is quite resource heavy and doesn't ensure you can join those games, only provides you with codes for active games. though, due to the large amounts of codes you get, you can get lucky with a code that has a good connection.
 
@@ -47,13 +47,13 @@ to search for kahoot games, run `search.py`. keep in mind that this script is qu
 - occassionally, the bots will be hit with a 'too many retries' HTTPS error. unfortunately, there is no way to combat this issue.
 
 ## things I want to do
-- implement a brute force 2 factor authentication method, just in case.
+- implement a brute force 2-factor authentication method, just in case.
 - bypass the profanity name filter
 - potentially break [this anti-bot script](https://github.com/theusaf/kahoot-antibot)
 - just optimise the code
 
 ## notes
-it is still not perfect and can definitely be improved. there are still a few things i want to add, such as providing more kinds of information in the log box.
+it is still not perfect and can definitely be improved. there are still a few things I want to add, such as providing more kinds of information in the log box.
 feel free to suggest pull requests and identify issues.
 
-i am not liable for any damage caused by the users of my scripts. these scripts most likely break kahoot's TOS (terms of service) and any consequences from misuse or severity are solely the users responsibility.
+I am not liable for any damage caused by the users of my scripts. these scripts most likely break kahoot's TOS (terms of service) and any consequences from misuse or severity are solely the users responsibility.

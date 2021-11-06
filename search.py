@@ -1,6 +1,5 @@
 import requests
 import random
-import time
 from threading import Thread
 from queue import Queue
 from datetime import datetime

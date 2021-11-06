@@ -1,6 +1,5 @@
 import npyscreen
 import datetime
-import random
 import shutil
 from time import sleep
 
@@ -9,8 +8,8 @@ class status(npyscreen.BoxTitle):
     entry_widget = npyscreen.SimpleGrid
 
 class questions(npyscreen.BoxTitle):
-	_contained_widget = npyscreen.SimpleGrid
-	entry_widget = npyscreen.SimpleGrid
+    _contained_widget = npyscreen.SimpleGrid
+    entry_widget = npyscreen.SimpleGrid
 
 class dateTime(npyscreen.BoxTitle):
     _contained_widget = npyscreen.FixedText
@@ -67,7 +66,7 @@ class Form(npyscreen.Form):
             self.time = f'{hour}:{minute}:{second}'
             self.dateTime_widget.value = self.date+' '+self.time
 
-            if queue.empty() == False:
+            if not queue.empty():
                 get = queue.get()
                 if get[0] == 'gui':
                     #Get values from queue
@@ -82,7 +81,7 @@ class Form(npyscreen.Form):
                     if get[2] == 'nums':
                         self.totalquestions = get[3]
                         self.question = get[4]
-                        self.logs_widget.values.append(f'Receieved total number of questions.')
+                        self.logs_widget.values.append(f'Received total number of questions.')
                         for i in range(self.totalquestions):
                             self.q_values.append([i+1,0,0,0,0])
                     elif get[2] == 'streaks':

@@ -2,6 +2,7 @@ from threading import Thread, Event
 from _bots import *
 from sys import argv
 from contextlib import suppress
+import queue
 q = queue.Queue()
 e = Event()
 e.set()
@@ -55,7 +56,7 @@ for i in range(len(args)):
             print("INFO: Output to terminal DISABLED.")
             gui = False
         if "s" in arg:
-            if glitchname == False:
+            if not glitchname:
                 style = True
                 print("INFO: Styled names ON")
             else:
@@ -68,7 +69,7 @@ for i in range(len(args)):
             print('ERR: Number of bots must be an integer.')
             exit()
     if "-n" in arg:
-        if glitchname == False:
+        if not glitchname:
             prefix = args[i]
             print(f"INFO: The bots will be named a derivative of {prefix}.")
         else:
@@ -119,7 +120,7 @@ if interactive:
             print('ERR: Missing arguments, use -h for help')
             exit()
         break
-names = gen_names(prefix,count,style,glitchname)
+names = gen_names(prefix, count, style, glitchname)
 
 ids = []
 for i in range(count):
@@ -127,13 +128,13 @@ for i in range(count):
 
 if gui:
     from _ui import *
-    def guifunc(*args):
-        global active
+    def guifunc(*_):
+        # global active
         f = Form(name='kahoot-annoyer', FIX_MINIMUM_SIZE_WHEN_CREATED=False)
         f.update_values(q,e)
 
 
-    def wrapper(q,e):
+    def wrapper(_,e):
         npyscreen.wrapper_basic(guifunc)
         e.clear()
         with suppress(KeyboardInterrupt):
@@ -178,7 +179,7 @@ for thread in threads:
 
 while e.is_set():
     try:
-        sleep(0.0001)
+        time.sleep(0.0001)
         if not e.is_set():
             e.clear()
     except KeyboardInterrupt:
