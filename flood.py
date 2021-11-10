@@ -7,6 +7,7 @@ q = queue.Queue()
 e = Event()
 e.set()
 
+
 def check_code(pin):
     epoch = int(datetime.datetime.now().timestamp())
     r = requests.get(f'https://kahoot.it/reserve/session/{pin}/?{epoch}')
@@ -16,18 +17,19 @@ def check_code(pin):
 
 #### Command-arguments section ####
 
+
 pin = None
 count = None
 interactive = False
 prefix = "bot"
 style = False
-glitchname = False
+glitch_name = False
 gui = True
 verbose = False
 
 args = argv[1:]
 for i in range(len(args)):
-    arg = args[i-1].lower()
+    arg = args[i - 1].lower()
     if "-" in arg:
         if "h" in arg or '--help' in arg:
             print(r''' _   __      _                 _      ___
@@ -50,13 +52,13 @@ for i in range(len(args)):
             print('INFO: Interactive mode ON')
             interactive = True
         if "g" in arg:
-            glitchname = True
+            glitch_name = True
             print("INFO: Glitched names ON")
         if "t" in arg:
             print("INFO: Output to terminal DISABLED.")
             gui = False
         if "s" in arg:
-            if not glitchname:
+            if not glitch_name:
                 style = True
                 print("INFO: Styled names ON")
             else:
@@ -69,7 +71,7 @@ for i in range(len(args)):
             print('ERR: Number of bots must be an integer.')
             exit()
     if "-n" in arg:
-        if not glitchname:
+        if not glitch_name:
             prefix = args[i]
             print(f"INFO: The bots will be named a derivative of {prefix}.")
         else:
@@ -107,20 +109,20 @@ if interactive:
         style = input('Add style to the names (y/n):')
         if style == 'y':
             style = True
-            glitchname = False
+            glitch_name = False
         else:
             style = False
-            glitchname = input('Glitched names (y/n):')
-            if glitchname == 'y':
-                glitchname = True
+            glitch_name = input('Glitched names (y/n):')
+            if glitch_name == 'y':
+                glitch_name = True
             else:
-                glitchname = False
+                glitch_name = False
 
         if not check_code(pin):
             print('ERR: Missing arguments, use -h for help')
             exit()
         break
-names = gen_names(prefix, count, style, glitchname)
+names = gen_names(prefix, count, style, glitch_name)
 
 ids = []
 for i in range(count):
@@ -128,19 +130,20 @@ for i in range(count):
 
 if gui:
     from _ui import *
+
     def guifunc(*_):
         # global active
         f = Form(name='kahoot-annoyer', FIX_MINIMUM_SIZE_WHEN_CREATED=False)
-        f.update_values(q,e)
+        f.update_values(q, e)
 
-
-    def wrapper(_,e):
+    def wrapper(_, e):
         npyscreen.wrapper_basic(guifunc)
         e.clear()
         with suppress(KeyboardInterrupt):
             raise KeyboardInterrupt
 
 quiz_url = ''
+
 
 def main_thread(queue):
     global quiz_url
@@ -152,25 +155,26 @@ def main_thread(queue):
             quiz_url = get[1]
             break
 
+
 threads = []
 quizid = ''
 
-thread = Thread(target=main_thread,args=(q,),name='main')
+thread = Thread(target=main_thread, args=(q,), name='main')
 threads.append(thread)
 
-manager = manager(queue=q,bot_names=names,event=e)
-thread = Thread(target=manager.run,name='bot-manager')
+manager = manager(queue=q, bot_names=names, event=e)
+thread = Thread(target=manager.run, name='bot-manager')
 threads.append(thread)
 
 for i in range(count):
-    f_bot = bot(name=names[i],pin=pin,ackId=ids[i],queue=q,event=e)
-    thread = Thread(target=f_bot.run,name=names[i])
+    f_bot = bot(name=names[i], pin=pin, ackId=ids[i], queue=q, event=e)
+    thread = Thread(target=f_bot.run, name=names[i])
     threads.append(thread)
     time.sleep(0.01)
 
 if gui:
-    q.put(['gui',count,'init',pin])
-    thread = Thread(target=wrapper, args=(q,e,), name='gui')
+    q.put(['gui', count, 'init', pin])
+    thread = Thread(target=wrapper, args=(q, e,), name='gui')
     threads.append(thread)
 
 for thread in threads:
