@@ -165,7 +165,7 @@ class bot:
                             self.answer_question([foo, game_type, question_num, len(answers)])
                         elif data['id'] == 8:
                             data_content = json.loads(data['content'])
-                            points_data = data_content['pointsdata']
+                            points_data = data_content['pointsData']
                             streak_data = points_data['answerStreakPoints']
                             try:
                                 correct = data_content['isCorrect']
